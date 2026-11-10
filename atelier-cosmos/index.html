@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#38224e">
+<meta name="description" content="Ателье созвездий — интерактивный прототип игры для М.Косметик.">
+<title>Ателье созвездий — прототип</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#342343;background:#24172e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at 50% 25%,#493267 0,#24172e 68%)}
+button,input,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid #ffc466;outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+#phone{height:750px;width:375px;max-width:100vw;flex-shrink:0;border:5px solid #604677;border-radius:28px;overflow:hidden;background:#fcf8ff;display:flex;flex-direction:column;position:relative;box-shadow:0 25px 60px #0b071b99}
+header{flex:0 0 65px;background:#35234a;display:flex;justify-content:space-between;align-items:center;padding:0 13px;color:#fff;gap:7px}
+.logo{display:flex;align-items:center;gap:7px;min-width:0}
+.logo .spark{font-size:28px;color:#ffdf97}
+.logo strong{display:block;font-size:12px;letter-spacing:.35px;white-space:nowrap;color:#fff}
+.logo small{display:block;font-size:10px;color:#eddaff;margin-top:3px}
+#test{background:#f7e8ff;color:#4b2670;border:1px solid #d5b8e9;font-size:12px;font-weight:800;border-radius:10px;padding:9px}
+#screen{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 24px;background:radial-gradient(ellipse at 50% 0,#fffaff 0,#f3e9fb 80%);scrollbar-width:thin;scrollbar-color:#aa80cc transparent}
+nav{flex:0 0 64px;display:flex;align-items:stretch;padding:6px;border-top:1px solid #e1cde9;background:#fff;gap:5px}
+nav button{flex:1;border:0;border-radius:9px;background:transparent;color:#624477;font-size:20px;font-weight:600}
+nav button span{display:block;font-size:10px;color:#59446b}
+nav button.active{background:#eee0f8;color:#4a2474}
+h1{font:normal 27px/1.15 Georgia,"Times New Roman",serif;text-align:center;color:#402752;margin:7px 0 10px}
+h2{font:normal 23px/1.2 Georgia,serif;color:#472b5e;margin:8px 0}
+h3{font-size:14px;color:#382449;margin:0 0 7px}
+p{margin:7px 0;line-height:1.5;font-size:13px;color:#594565}
+.eyebrow{text-align:center;color:#754495;text-transform:uppercase;letter-spacing:1.3px;font-weight:800;font-size:10px;margin-bottom:7px}
+.lead{text-align:center;font-size:14px;line-height:1.58;color:#564163;margin:6px 0 16px}
+.card{background:#fff;border:1px solid #dec8e9;border-radius:17px;padding:14px;margin:11px 0}
+.card strong{color:#412453}
+.card p{color:#584466}
+.primary,.secondary{width:100%;border-radius:12px;min-height:46px;padding:12px;font-size:14px;font-weight:800;display:block}
+.primary{color:#fff;background:#683590;border:1px solid #683590}
+.secondary{color:#4b2a68;background:#fff;border:1.5px solid #a582c1}
+.gap{height:9px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.zodiac{background:#fff;border:1px solid #d8c0e6;border-radius:13px;color:#402c53;min-height:81px;padding:10px 5px;text-align:center}
+.zodiac i{display:block;font-style:normal;font-size:26px;color:#7c43a2}
+.zodiac b{display:block;font-size:12px;margin:4px 0}
+.zodiac small{display:block;color:#5c4a6d;font-size:10px;line-height:1.4}
+.hero{border:1px solid #d5b6e6;border-radius:18px;background:radial-gradient(ellipse at center,#fffaff,#e2cdec);margin:11px 0;position:relative;overflow:hidden}
+.hero svg{display:block;width:100%;height:234px}
+.hero .tag{position:absolute;right:8px;top:8px;background:#fff;color:#5f397e;border-radius:15px;padding:5px 8px;font-size:11px;font-weight:800}
+.invitation{background:radial-gradient(ellipse at 50% 20%,#7753a8,#38234e 85%);color:white;border:2px solid #dfbc80;border-radius:17px;text-align:center;min-height:167px;padding:18px 12px;margin:13px 0}
+.invitation .stars{font-size:30px;color:#ffe0a3}
+.invitation h2{color:#fff0c7;font-size:25px}
+.invitation p{color:#fff}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.stat{flex:1;background:#fff;border:1px solid #d8c5e4;border-radius:12px;padding:10px}
+.stat small{display:block;color:#645070;font-size:11px}
+.stat b{display:block;color:#422b58;font-size:20px;margin-top:3px}
+.bar{display:flex;gap:4px;margin:10px 0}
+.bar i{flex:1;height:9px;border-radius:5px;background:#e2d3eb}
+.bar i.on{background:#824aaf}
+.scroller{display:flex;gap:9px;overflow-x:auto;scroll-snap-type:x mandatory;padding:5px 1px 12px}
+.option{flex:0 0 145px;scroll-snap-align:start;background:#fff;border:1.5px solid #d6c3e5;border-radius:14px;color:#3e2852;padding:9px;text-align:center}
+.option .picture{height:98px;display:flex;align-items:center;justify-content:center;border-radius:11px;font-size:49px;margin-bottom:8px}
+.option b{font-size:12px;display:block}
+.option small{font-size:11px;color:#615170;display:block;margin-top:5px}
+.workshop{padding:13px;background:#f1e2fa;border:1px solid #cdb0e1;border-radius:17px;margin:12px 0}
+.workshop svg{width:100%;height:161px;display:block}
+.drop{padding:11px;border:2px dashed #a078bb;border-radius:12px;text-align:center;color:#4a2c6a;background:#fff;font-size:12px;font-weight:800}
+.thread{width:100%;border-radius:11px;background:#fff;border:2px dashed #8b55b6;color:#543078;font-weight:800;padding:12px;margin-top:10px}
+.fabric{background:repeating-linear-gradient(120deg,#955ebe 0,#955ebe 14px,#b184cd 15px,#b184cd 28px);min-height:92px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:2px solid #7e46a6;margin:10px 0;user-select:none;touch-action:none;cursor:ew-resize;padding:12px}
+.fabric span{background:#fff;color:#4d2a6a;padding:10px;border-radius:11px;font-size:13px;font-weight:800;pointer-events:none}
+.reward{height:110px;width:110px;border-radius:24px;background:linear-gradient(135deg,#d7b4f0,#ffeed0);font-size:61px;display:grid;place-items:center;margin:12px auto;border:1px solid #d1a5df}
+.oracle{background:radial-gradient(circle at 45% 20%,#8156ad,#36204c 85%);border:3px solid #cba6d9;color:white;border-radius:19px;text-align:center;min-height:253px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;margin:12px 0}
+.oracle b{font:24px Georgia,serif;color:#ffe3a8;margin:7px 0 12px}
+.oracle .symbol{font-size:43px;color:#ffe1a8}
+.oracle p{font:16px/1.48 Georgia,serif;color:white}
+.oracle small{font-size:11px;color:#f6e8ff}
+.item{background:#fff;border:1.5px solid #d3bfe1;border-radius:12px;color:#3f2b50;min-height:87px;padding:8px 4px;text-align:center}
+.item.on{background:#e8d8f3;border:2px solid #834cac}
+.item i{font-style:normal;font-size:27px;display:block}
+.item b{font-size:10px;line-height:1.25;display:block}
+.item small{font-size:10px;color:#55416b;display:block}
+.rating{display:flex;gap:5px;margin:10px 0}
+.rating button{flex:1;padding:10px;border:1px solid #a583bc;border-radius:9px;color:#4b2d67;background:#fff;font-weight:800}
+.rating button.on{color:#fff;background:#704091}
+.backdrop{position:absolute;inset:0;background:#140e1caa;z-index:30;display:flex;align-items:flex-end}
+.backdrop[hidden]{display:none}
+.sheet{width:100%;max-height:91%;overflow:auto;background:#fff;border-radius:22px 22px 0 0;padding:17px}
+.sheet h2{font-size:22px}
+.sheet textarea{width:100%;min-height:83px;border:1px solid #ae91c5;color:#342343;background:#fff;padding:10px;border-radius:10px;font-size:13px;resize:vertical}
+.sheet .jump{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:13px 0}
+.sheet .jump button{font-size:12px;color:#42215e;background:#f3e7f9;border:1px solid #b899d2;border-radius:10px;padding:12px 7px;font-weight:800}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.muted{font-size:12px;color:#624f70}
+.center{text-align:center}
+.finalguests{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:12px 0}
+.finalguests span{display:block;border:1px solid #d6c1e4;background:white;text-align:center;padding:9px 0;border-radius:9px;font-size:22px;color:#67398e}
+@media(max-width:425px){body{background:#fcf8ff;align-items:flex-start}#phone{width:100vw;max-width:375px;height:min(750px,100dvh);min-height:560px;border:0;border-radius:0;box-shadow:none}}
+</style>
+</head>
+<body>
+<div id="phone">
+<header><div class="logo"><span class="spark">✦</span><div><strong>АТЕЛЬЕ СОЗВЕЗДИЙ</strong><small>М.Косметик · Бал 12 знаков</small></div></div><button id="test" aria-label="Открыть тестовый режим">⚙ Тест</button></header>
+<main id="screen" aria-live="polite"></main>
+<nav id="nav" aria-label="Основная навигация"></nav>
+<div class="backdrop" id="modal" hidden></div>
+</div>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var STORE="atelier-cosmos-static-v1";
+var Z=[
+["aries","♈","Овен","Смелость и энергия","Золотое руно — образ из древнегреческих мифов."],
+["taurus","♉","Телец","Красота и уют","Небесный бык встречается в античных легендах."],
+["gemini","♊","Близнецы","Любопытство и идеи","Кастор и Полидевк — братья из греческих мифов."],
+["cancer","♋","Рак","Чуткость и забота","Рак появляется в одном из мифов о Геракле."],
+["leo","♌","Лев","Смелость и сияние","Лев связан с легендой о Немейском льве."],
+["virgo","♍","Дева","Гармония и детали","Образ Девы связывают с богинями урожая."],
+["libra","♎","Весы","Баланс и изящество","Весы — символ равновесия и справедливости."],
+["scorpio","♏","Скорпион","Тайна и решимость","Скорпион встречается в мифах об Орионе."],
+["sagittarius","♐","Стрелец","Приключения и свобода","Мифический лучник вдохновил образ созвездия."],
+["capricorn","♑","Козерог","Упорство и мечты","Морской козёл — древний образ Козерога."],
+["aquarius","♒","Водолей","Фантазия и свобода","Образ водоноса встречается в античной традиции."],
+["pisces","♓","Рыбы","Романтика и мечты","Две рыбы связаны с легендой об Афродите."]
+];
+var ST=[["Романтичный","🌸","#edb3d7","#b96d9b"],["Дерзкий","⚡","#b8a0e8","#6f4ba4"],["Загадочный","🌙","#a499cb","#58518e"],["Роскошный","👑","#edd09a","#bc8a45"],["Воздушный","🦋","#b6dae9","#82b2cd"]];
+var TYPES=["top","bottom","shoes","jewel"];
+var TL={top:"Верх",bottom:"Низ",shoes:"Обувь",jewel:"Украшение"};
+var EM={top:"👚",bottom:"👗",shoes:"👠",jewel:"💎"};
+var NAMES={top:["Лунный корсаж","Бархатный жакет","Золотое сияние"],bottom:["Юбка облаков","Брюки туманности","Звёздный шёлк"],shoes:["Туфли Луны","Сапожки кометы","Хрустальные туфли"],jewel:["Лунная подвеска","Аметистовые серьги","Звёздное ожерелье"]};
+var DAYS=[null,"full","start","finish","start","finish","start","finish","full","start","finish","start","finish","start","finish","full","start","finish","start","finish","own-start","own-finish"];
+var PHRASES=["Сегодня выбирай только то, что нравится тебе.","Красота не обязана подчиняться чужим правилам.","Маленький эксперимент может подарить большое удовольствие.","Не бойся новых сочетаний.","Ты заслуживаешь времени для себя.","Менять образ и настроение — прекрасно.","Сегодня можно позволить себе помечтать.","Только ты решаешь, какой хочешь быть.","Маленькие детали создают волшебство.","Попробуй необычный вариант, если хочется.","Красота начинается с удовольствия быть собой.","Необязательно ждать повода, чтобы сиять.","Ты можешь никому ничего не доказывать.","Интересные образы рождаются из экспериментов.","Выбирай цвет, который приносит радость.","Звёзды предлагают вдохновение, выбор за тобой.","Новое открытие всегда начинается с маленького шага.","Фантазия не знает границ.","Самое красивое украшение — свобода выбора.","Твой праздничный образ становится ближе.","Сегодня твой выход: сияй так, как хочется!"];
+function fresh(own){return {own:own||null,day:1,done:false,page:own?"home":"intro",guests:[],draft:null,step:0,items:[],look:{},cards:[],legend:false,legendOn:true,thread:false,strokes:0,pick:0,reward:null,ratings:{},notes:"",events:[],final:false,phase:"",dayStartedAt:null};}
+var s;
+try{s=JSON.parse(localStorage.getItem(STORE))||fresh()}catch(e){s=fresh()}
+if(!s||!Array.isArray(s.guests))s=fresh();
+function save(){try{localStorage.setItem(STORE,JSON.stringify(s))}catch(e){}}
+function event(action,data){s.events.push({action:action,day:s.day,t:new Date().toISOString(),data:data||{}});save()}
+function find(id){return Z.find(function(x){return x[0]===id})||Z[0]}
+function kind(){return DAYS[s.day]}
+function ownDay(){return kind().indexOf("own")===0}
+function todayParts(){return kind()==="full"?TYPES:(kind()==="start"||kind()==="own-start"?TYPES.slice(0,2):TYPES.slice(2))}
+function escapeHtml(x){return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function button(label,act,cls){return '<button class="'+(cls||"primary")+'" data-act="'+act+'">'+label+'</button>'}
+function title(small,big,desc){return '<div class="eyebrow">'+small+'</div><h1>'+big+'</h1>'+(desc?'<p class="lead">'+desc+'</p>':"")}
+function bar(n,total){var o='<div class="bar">';for(var i=0;i<total;i++)o+='<i class="'+(i<n?"on":"")+'"></i>';return o+"</div>"}
+function unlock(index){
+var old=s.items.find(function(v){return v.index===index});if(old)return old;
+var type=TYPES[index%4],tier=Math.floor(index/4),colors=["#c58bcb","#9377c9","#dfb565"];
+var item={index:index,type:type,name:NAMES[type][tier],emoji:EM[type],color:colors[tier]};
+s.items.push(item);
+if(!s.look[type])s.look[type]=item;
+return item;
+}
+function choices(type){
+if(ownDay())return s.items.filter(function(item){return item.type===type});
+var st=ST[s.draft.style||0];
+var names={top:["Корсаж созвездия","Праздничный жакет"],bottom:["Звёздная юбка","Бархатные брюки"],shoes:["Туфли-кометы","Лунные ботинки"],jewel:["Лунная брошь","Солнечный амулет"]};
+return names[type].map(function(name,i){return {name:name,type:type,emoji:EM[type],color:st[i?3:2],variant:i}});
+}
+function avatar(look,id){
+var z=find(id);var male=Z.findIndex(function(x){return x[0]===id})%3===1&&id!==s.own;
+var top=look.top?look.top.color:"#e1d0eb",bot=look.bottom?look.bottom.color:"#decde6",shoes=look.shoes?look.shoes.color:"#b5a4c5";
+return '<svg viewBox="0 0 260 285" role="img" aria-label="Персонаж '+escapeHtml(z[2])+' в праздничном образе" xmlns="http://www.w3.org/2000/svg">'+
+'<ellipse cx="130" cy="272" rx="66" ry="8" fill="#89649e" opacity=".2"/><text x="22" y="56" fill="#bd8bd6" font-size="28">✦</text><text x="212" y="80" fill="#b68aca" font-size="23">✧</text>'+
+'<path d="M111 213 L106 265 L124 265 L137 212 Z M140 213 L145 265 L162 265 L153 212 Z" fill="#e7bda1"/>'+
+'<path d="M105 259 L125 259 L125 274 L97 274 Z M145 259 L160 259 L175 274 L144 274Z" fill="'+shoes+'" stroke="#8d719e" stroke-width="2"/>'+
+'<path d="M98 113 Q74 145 67 191 L82 195 L112 139 M163 113 Q188 142 193 191 L179 195 L149 138" fill="#e8bca2"/>'+
+(male?'<path d="M103 164 L162 164 L160 243 L138 243 L130 188 L123 243 L101 243 Z" fill="'+bot+'" stroke="#a994bb" stroke-width="2"/>':'<path d="M107 153 Q97 193 66 243 Q130 268 194 243 Q167 192 158 153Z" fill="'+bot+'" stroke="#b29ac3" stroke-width="2"/>')+
+'<path d="M112 105 L148 105 L164 124 L155 166 Q130 174 105 166 L97 124Z" fill="'+top+'" stroke="#a58bb4" stroke-width="2"/><path d="M115 114 Q130 132 147 114" fill="none" stroke="#ffffffa8" stroke-width="3"/>'+
+'<path d="M119 86 L119 113 Q131 123 142 113 L142 86Z" fill="#ecc4a7"/>'+
+'<path d="M98 66 Q90 21 130 20 Q171 20 164 76 L160 106 Q148 128 130 128 Q109 128 100 106Z" fill="#6c4961"/>'+
+'<path d="M103 65 Q114 43 130 44 Q155 45 159 68 L157 97 Q149 117 130 118 Q109 117 103 97Z" fill="#efc8b0"/>'+
+'<path d="M117 80 Q122 77 127 80 M137 80 Q142 77 147 80" stroke="#463047" stroke-width="2" stroke-linecap="round"/><path d="M126 100 Q133 105 139 100" fill="none" stroke="#ae6075" stroke-width="2"/>'+
+(!male?'<path d="M100 74 Q95 34 124 33 Q150 28 164 73 Q148 56 141 48 Q121 69 100 74Z" fill="#6c4961"/><path d="M101 79 Q86 130 109 148 L101 99Z M159 78 Q176 131 151 148 L158 99Z" fill="#6c4961"/>':'')+
+(look.jewel?'<path d="M115 116 Q130 144 147 116" fill="none" stroke="#eabd62" stroke-width="3"/><circle cx="131" cy="142" r="5" fill="#ffdc8e"/>':'')+
+(id===s.own&&s.legend&&s.legendOn?'<path d="M99 47 L108 15 L125 33 L133 4 L149 33 L162 15 L169 47 Z" fill="#e3b55f" stroke="#fff0a5" stroke-width="3"/>':'')+
+'<text x="130" y="16" text-anchor="middle" fill="#9353ab" font-size="15">'+z[1]+'</text></svg>';
+}
+function art(look,id,label){return '<div class="hero">'+avatar(look,id)+'<div class="tag">'+label+'</div></div>'}
+function intro(){
+return title("✦ Приглашение","Бал созвездий","12 знаков зодиака, 12 праздничных костюмов и один волшебный бал.")+
+'<div class="invitation"><div class="stars">✦ ☽ ✧</div><h2>Звёздное ателье</h2><p>Создавай наряды для гостей и получай вещи для собственного костюма. Здесь нет неправильных решений.</p></div>'+
+'<div class="card"><h3>Выбери свой знак зодиака</h3><p>Твой наряд станет финальным, но собирать вещи для него ты начнёшь с первого дня.</p></div><div class="grid3">'+Z.map(function(z,i){return '<button class="zodiac" data-act="own" data-i="'+i+'"><i>'+z[1]+'</i><b>'+z[2]+'</b></button>'}).join("")+'</div>'+
+'<p class="muted center">Астрология здесь — развлекательная сказочная тема, а не научный прогноз.</p>';
+}
+function home(){
+var made=s.guests.length+(s.final?1:0),partsDone=s.draft?Object.keys(s.draft.parts).length:0;
+var d=kind();
+var desc=d==="full"?"Создай полный костюм нового гостя и получи подарок.":d==="start"?"Сегодня создаём верх и низ для нового гостя.":d==="finish"?"Заверши костюм гостя, забери награду и карту дня.":d==="own-start"?"Время выбрать стиль и создать свой верх и низ.":"Заверши свой костюм и отправляйся на бал.";
+var nextType=TL[TYPES[s.guests.length%4]];
+var output=title("ДЕНЬ "+s.day+" ИЗ 21","Твой звёздный день",desc)+
+'<div class="stats"><div class="stat"><small>Костюмов готово</small><b>'+made+' / 12</b></div><div class="stat"><small>Карт оракула</small><b>'+s.cards.length+' / 21</b></div></div>'+
+'<div class="card"><div class="row"><h3>✦ Следующий образ</h3><span class="muted">'+Math.min(made+1,12)+' / 12</span></div>'+bar(partsDone,4)+
+'<p>Готово '+partsDone+'/4 деталей. '+(ownDay()?"Сегодня создаёшь свой образ.":"За завершение — "+nextType.toLowerCase()+" для себя.")+'</p></div>';
+if(s.items.length)output+=art(s.look,s.own,"Мой образ");
+else output+='<div class="invitation"><div class="stars">✦ ♕ ✦</div><h2>Твой гардероб</h2><p>Первая вещь появится после первого сшитого костюма.</p></div>';
+if(s.done){
+output+='<div class="card"><h3>✓ Сегодняшний этап завершён</h3><p>Карта дня уже получена. Можно продолжить тест в следующем дне.</p></div>';
+output+=s.day===21?button("✦ Открыть финальный бал","ball"):button("Следующий день (тест)","next");
+output+='<div class="gap"></div>'+button("Посмотреть карту дня","oracle","secondary");
+}else{
+output+=button(ownDay()?"Создать свой праздничный костюм ✦":d==="finish"?"Продолжить костюм гостя ✦":"Выбрать гостя ✦","begin");
+}
+if(s.items.length)output+='<div class="gap"></div>'+button("Примерить полученные вещи","closet","secondary");
+return output;
+}
+function guestSelection(){
+var available=Z.filter(function(z){return z[0]!==s.own&&s.guests.indexOf(z[0])<0});
+return title("ШАГ 1 · ГОСТЬ","Кого нарядим?","Выбирай по знаку, характеру или легенде. В какой последовательности — решать тебе.")+
+'<div class="grid2">'+available.map(function(z){return '<button class="zodiac" data-act="guest" data-id="'+z[0]+'"><i style="font-size:35px">'+z[1]+'</i><b style="font-size:14px">'+z[2]+'</b><small>'+z[3]+'</small></button>'}).join("")+'</div>'+
+'<div class="card"><h3>Что с твоим костюмом?</h3><p>Каждый готовый гостевой наряд дарит тебе вещь. Её можно примерить сразу после получения, не дожидаясь бала.</p></div>';
+}
+function selectStyle(){
+var z=find(s.draft.id);
+return title("ШАГ 2 · СТИЛЬ","Стиль для "+z[2],z[4])+art(s.draft.parts,z[0],z[1]+" "+z[2])+
+'<p class="lead">Листай карточки и выбери один из пяти стилей.</p><div class="scroller">'+ST.map(function(st,i){return '<button class="option" data-act="style" data-i="'+i+'"><div class="picture" style="background:linear-gradient(135deg,'+st[2]+','+st[3]+')">'+st[1]+'</div><b>'+st[0]+'</b><small>Выбрать стиль</small></button>'}).join("")+'</div>';
+}
+function pickPart(){
+var type=todayParts()[s.step],z=find(s.draft.id),v=choices(type),done=Object.keys(s.draft.parts).length;
+var chooseText=ownDay()?"Это твои вещи из коллекции. Выбери подходящую.":"Выбери один из двух вариантов.";
+return title("ЭЛЕМЕНТ "+(done+1)+" ИЗ 4",TL[type],chooseText)+art(s.draft.parts,z[0],z[2])+bar(done,4)+
+'<div class="scroller">'+v.map(function(item,i){return '<button class="option" data-act="pick" data-i="'+i+'"><div class="picture" style="background:linear-gradient(135deg,'+item.color+'8c,#fffaff)">'+item.emoji+'</div><b>'+escapeHtml(item.name)+'</b><small>'+(ownDay()?"Из твоего гардероба":"Вариант "+(i+1))+'</small></button>'}).join("")+'</div>'+
+'<div class="card"><h3>'+ (type==="jewel"?"✧ Последний штрих":"🧵 Далее — швейная мастерская")+'</h3><p>'+(type==="jewel"?"Украшение появится на образе сразу после выбора.":"Вставь нитки в машинку и подай ткань 4 жестами. Проиграть невозможно.")+'</p></div>';
+}
+function machine(){
+return '<svg viewBox="0 0 280 165" role="img" aria-label="Швейная машинка" xmlns="http://www.w3.org/2000/svg">'+
+'<ellipse cx="140" cy="149" rx="108" ry="8" fill="#9f79b5" opacity=".3"/><rect x="36" y="117" width="210" height="28" rx="10" fill="#655083"/>'+
+'<path d="M70 47 Q70 25 98 25 H176 Q202 25 202 51 V99 H173 V68 H105 V113 H70 Z" fill="#a984ca" stroke="#79559e" stroke-width="4"/>'+
+'<path d="M95 41 H177" stroke="#f5e5ff" stroke-width="6" stroke-linecap="round"/><circle cx="189" cy="48" r="11" fill="#f3d8b1" stroke="#80599c" stroke-width="4"/>'+
+'<rect x="44" y="110" width="175" height="12" rx="4" fill="#f0d3aa"/><path d="M183 69 V111 M170 114 H195" stroke="#50385f" stroke-width="4"/>'+
+'<rect x="91" y="17" width="14" height="17" rx="3" fill="'+(s.thread?"#f3c470":"#dec6ee")+'"/><path d="M98 17 V7" stroke="#7f6391" stroke-width="3"/>'+
+'<path d="M102 30 Q153 15 182 66" stroke="'+(s.thread?"#f2bc56":"#ddd0e8")+'" stroke-width="2.5" fill="none" stroke-dasharray="'+(s.thread?"0":"5 5")+'"/>'+
+'<text x="133" y="99" font-size="23" text-anchor="middle" fill="#ffe4a4">✦</text></svg>';
+}
+function sewing(){
+var type=todayParts()[s.step],item=choices(type)[s.pick];
+var out=title("ШВЕЙНАЯ МАСТЕРСКАЯ","Шьём "+(type==="top"?"верх":type==="bottom"?"низ":"обувь"),escapeHtml(item.name))+
+'<div class="workshop">'+machine()+'<div class="drop" id="drop">'+(s.thread?"✓ Нитки вставлены, машинка готова!":"Перенеси катушку ниток к машинке")+'</div>';
+if(!s.thread)out+='<button class="thread" data-act="thread" draggable="true">🧵 Вставить катушку ниток</button><p class="center muted">Нажми на катушку или перетащи её к машинке.</p>';
+else out+='<div id="fabric" class="fabric"><span>'+(s.strokes===4?"✓ Готово!":"↔ Проведи по ткани · "+s.strokes+"/4")+'</span></div>'+bar(s.strokes,4)+
+'<p class="muted center">4 движения по ткани. Можно нажимать на неё.</p>'+(s.strokes>=4?button("✦ Примерить деталь","sewcomplete"):"");
+return out+'</div><div class="card"><h3>Нет поражений и таймера</h3><p>Экспериментируй спокойно. Ошибка не отнимает награду.</p></div>';
+}
+function reward(){
+var item=s.reward&&s.reward.item,rare=s.reward&&s.reward.rare;
+var out=title("ДЕНЬ "+s.day+" · ГОТОВО",s.final?"Твой образ готов!":item?"Подарок для тебя!":"Отличная работа!","Этап завершён, прогресс сохранён.");
+if(item)out+='<div class="reward">'+item.emoji+'</div><h2 class="center">'+escapeHtml(item.name)+'</h2><p class="lead">Вещь попала в твой гардероб. Её можно примерить.</p>';
+if(rare)out+='<div class="card" style="background:#fff2d4;border-color:#d1a86a"><h3>👑 Легендарная корона созвездий!</h3><p>Награда за одиннадцатого гостя. Корону можно надеть или оставить в коллекции.</p></div>';
+if(!item&&!s.final)out+='<div class="card"><h3>✓ Две детали готовы</h3><p>В следующем дне создадим обувь и выберем украшение. Всё сохранено.</p></div>';
+if(s.final)out+='<div class="card"><h3>12 из 12 костюмов</h3><p>Бал готов начаться. Открой заключительное предсказание.</p></div>';
+out+='<div class="card"><h3>Хочется вернуться завтра?</h3><div class="rating">'+[1,2,3,4,5].map(function(n){return '<button class="'+(s.ratings[s.day]===n?"on":"")+'" data-act="rate" data-i="'+n+'">'+n+'</button>'}).join("")+'</div><p class="muted">1 — совсем нет · 5 — очень хочется</p></div>';
+out+=button("✧ Открыть карту дня","oracle");
+if(s.items.length)out+='<div class="gap"></div>'+button("Примерить новые вещи","closet","secondary");
+return out;
+}
+function oracle(){
+var z=find(s.own),has=s.cards.indexOf(s.day)>=0;
+var special=s.day===7?"Прогноз на неделю":s.day===14?"Прогноз на месяц":s.day===21?"Прогноз на год":null;
+var predicted=s.day===7?"На неделе тебя ждут новые поводы выбирать себя и радоваться мелочам.":s.day===14?"Пусть этот месяц станет временем красивых экспериментов и открытий.":"Пусть год подарит много вдохновения и свободы быть собой.";
+var out=title("ЛИЧНЫЙ ОРАКУЛ","Карта №"+s.day,"Твой знак — "+z[2]+". Собрано "+s.cards.length+" из 21 карт.")+
+'<div class="oracle"><div class="symbol">'+z[1]+'</div><small>✧ ПОСЛАНИЕ СОЗВЕЗДИЙ ✧</small><b>'+z[2]+'</b><p>'+(has?PHRASES[s.day-1]:"Заверши сегодняшний этап, чтобы открыть карту.")+'</p><small>КАРТА '+s.day+' / 21</small></div>';
+if(special&&has)out+='<div class="card" style="background:#fff2d4;border-color:#d1a86a"><h3>✦ '+special+' открыт!</h3><p>'+predicted+'</p></div>';
+out+='<div class="card"><h3>Твоя коллекция</h3>'+bar(s.cards.length,21)+'<p>7 карт — неделя · 14 карт — месяц · 21 карта — год</p></div>';
+out+=button(s.final?"✦ Отправиться на бал":"Вернуться в ателье",s.final?"ball":"home");
+if(s.done&&s.day<21)out+='<div class="gap"></div>'+button("Следующий день (тест)","next","secondary");
+return out;
+}
+function closet(){
+if(!s.items.length){s.page="home";return home()}
+var out=title("ТВОЙ ГАРДЕРОБ","Наряжаем себя","Все заработанные вещи можно сразу примерять. Сейчас "+s.items.length+" из 12.")+art(s.look,s.own,"Мой образ");
+TYPES.forEach(function(type){
+var aa=s.items.filter(function(p){return p.type===type});
+out+='<div class="card"><h3>'+EM[type]+' '+TL[type]+'</h3><div class="grid3">'+(aa.length?aa.map(function(p){return '<button class="item '+(s.look[type]&&s.look[type].index===p.index?"on":"")+'" data-act="wear" data-i="'+p.index+'"><i>'+p.emoji+'</i><b>'+escapeHtml(p.name)+'</b><small>'+(s.look[type]&&s.look[type].index===p.index?"Надето":"Примерить")+'</small></button>'}).join(""):'<p class="muted" style="grid-column:1/-1">Пока нет. Получишь за следующих гостей.</p>')+'</div></div>';
+});
+if(s.legend)out+='<div class="card"><h3>👑 Корона созвездий</h3><p>Легендарная награда после 11-го гостя.</p><div class="gap"></div>'+button(s.legendOn?"Снять корону":"Надеть корону","legend","secondary")+'</div>';
+return out+button("Вернуться к игре","home");
+}
+function ball(){
+return title("✦ БАЛ СОЗВЕЗДИЙ","Сегодня сияешь ты!","Одиннадцать гостей пришли на праздник в созданных тобой нарядах. Теперь твой выход!")+
+art(s.look,s.own,"Главная гостья")+
+'<div class="finalguests">'+s.guests.map(function(id){return '<span title="'+find(id)[2]+'">'+find(id)[1]+'</span>'}).join("")+'<span title="Твой знак" style="background:#ffe6b4">'+find(s.own)[1]+'</span></div>'+
+'<div class="card center"><h3>✦ 12 из 12</h3><p>Ты создала целую коллекцию, а собственный образ собрала из любимых вещей. Твой выбор — твои правила!</p></div>'+
+button("Посмотреть мой образ","closet")+ '<div class="gap"></div>'+button("Прогноз на год","oracle","secondary");
+}
+function render(){
+$("modal").hidden=true;
+$("nav").innerHTML='<button data-act="home" class="'+(s.page==="home"?"active":"")+'">⌂<span>Ателье</span></button>'+
+(s.items.length?'<button data-act="closet" class="'+(s.page==="closet"?"active":"")+'">♕<span>Мой образ</span></button>':'')+
+'<button data-act="oracle" class="'+(s.page==="oracle"?"active":"")+'">✧<span>Оракул</span></button>';
+var pages={intro:intro,home:home,guests:guestSelection,style:selectStyle,pick:pickPart,sew:sewing,reward:reward,oracle:oracle,closet:closet,ball:ball};
+$("screen").innerHTML=(pages[s.page]||home)();
+$("screen").scrollTop=0;save();
+}
+function begin(){
+if(s.done)return;
+if(kind()==="finish"||kind()==="own-finish"){
+if(!s.draft)return;
+s.step=0;s.phase="pick";s.page="pick";
+}else if(kind()==="own-start"){
+unlock(11);s.draft={id:s.own,style:0,parts:{}};s.step=0;s.phase="style";s.page="style";
+}else{
+s.draft={id:null,style:0,parts:{}};s.step=0;s.phase="guests";s.page="guests";
+}
+s.dayStartedAt=Date.now();event("day_started",{mode:kind()});render();
+}
+function selectItem(i){
+var type=todayParts()[s.step],v=choices(type);
+if(!v[i])return;
+s.pick=i;event("item_chosen",{type:type,index:i});
+if(type==="jewel"){applyItem(i);return}
+s.thread=false;s.strokes=0;s.phase="sew";s.page="sew";render();
+}
+function applyItem(i){
+var type=todayParts()[s.step],item=choices(type)[i];
+if(!item)return;
+s.draft.parts[type]=item;
+if(ownDay())s.look[type]=item;
+s.step++;event("garment_complete",{type:type,index:i});
+if(s.step>=todayParts().length)finish();else{s.phase="pick";s.page="pick";render();}
+}
+function finish(){
+if(kind()==="full"||kind()==="finish"){
+var id=s.draft.id;
+if(s.guests.indexOf(id)<0){
+s.guests.push(id);
+var item=unlock(s.guests.length-1);
+s.reward={item:item,rare:s.guests.length===11};
+if(s.guests.length===11)s.legend=true;
+event("guest_completed",{id:id,completed:s.guests.length});
+}
+s.draft=null;s.phase="";
+}else if(kind()==="own-finish"){s.final=true;s.draft=null;s.phase="";}
+else{s.phase="";}
+s.done=true;
+if(s.cards.indexOf(s.day)<0)s.cards.push(s.day);
+s.page="reward";event("day_finished",{guests:s.guests.length,items:s.items.length});
+render();
+}
+function next(){
+if(!s.done||s.day>=21)return;
+s.day++;s.done=false;s.step=0;s.reward=null;s.page="home";s.phase="";
+event("next_day");render();
+}
+function autoDay(d){
+var m=DAYS[d],own=m.indexOf("own")===0;
+if(m==="full"||m==="start"){
+var z=Z.find(function(z){return z[0]!==s.own&&s.guests.indexOf(z[0])<0});
+s.draft={id:z[0],style:0,parts:{}};
+}else if(m==="own-start"){unlock(11);s.draft={id:s.own,style:0,parts:{}};}
+var pp=m==="full"?TYPES:(m==="start"||m==="own-start"?TYPES.slice(0,2):TYPES.slice(2));
+pp.forEach(function(type){
+var item=own?s.items.find(function(x){return x.type===type}):{type:type,name:"Тестовый вариант",color:"#b790d4",emoji:EM[type]};
+s.draft.parts[type]=item;if(own)s.look[type]=item;
+});
+if(m==="full"||m==="finish"){s.guests.push(s.draft.id);unlock(s.guests.length-1);if(s.guests.length===11)s.legend=true;s.draft=null}
+if(m==="own-finish"){s.final=true;s.draft=null}
+s.cards.push(d);
+}
+function jump(d){
+var oldOwn=s.own,oldNotes=s.notes;s=fresh(oldOwn);s.notes=oldNotes;
+for(var i=1;i<d;i++)autoDay(i);
+s.day=d;s.page="home";s.done=false;s.reward=null;s.step=0;
+event("test_jump",{target:d});render();
+}
+function testModal(){
+$("modal").hidden=false;
+$("modal").innerHTML='<div class="sheet"><div class="row"><h2>Тестовый режим</h2><button data-act="close" style="color:#512e73;border:0;background:transparent;font-weight:800">✕ Закрыть</button></div>'+
+'<p>Быстро проверь ключевые дни. Все предыдущие этапы при переходе будут автоматически заполнены.</p>'+
+'<div class="jump">'+[1,7,14,19,20,21].map(function(d){var labels={1:"Старт",7:"Неделя",14:"Месяц",19:"Корона",20:"Свой образ",21:"Бал"};return '<button data-act="jump" data-i="'+d+'">День '+d+' · '+labels[d]+'</button>'}).join("")+'</div>'+
+'<div class="card"><h3>Что наблюдать</h3><p>Понятна ли цель? Хочется ли получить вещь себе? Не утомляет ли машинка? Есть ли желание вернуться?</p></div>'+
+'<p><strong>Заметки исследователя</strong></p><textarea id="notes" placeholder="Что было непонятно, а что интересно?">'+escapeHtml(s.notes)+'</textarea><div class="gap"></div>'+
+button("Выгрузить результаты теста","export","secondary")+'<div class="gap"></div>'+button("Сбросить весь прогресс","reset","secondary")+'</div>';
+}
+function exportData(){
+var out={project:"Ателье созвездий",screen:"375x750",ownSign:s.own,day:s.day,completed:s.guests.length,ratings:s.ratings,notes:s.notes,events:s.events,exportedAt:new Date().toISOString()};
+var blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
+var url=URL.createObjectURL(blob),a=document.createElement("a");
+a.href=url;a.download="atelier-ux-test.json";a.click();
+setTimeout(function(){URL.revokeObjectURL(url)},1500);
+}
+document.addEventListener("click",function(e){
+if(e.target.id==="test"){testModal();return}
+var btn=e.target.closest("[data-act]");if(!btn||btn.disabled)return;
+var action=btn.dataset.act,i=Number(btn.dataset.i);
+switch(action){
+case "own":s.own=Z[i][0];s.page="home";event("own_sign_selected",{id:s.own});break;
+case "home":s.page="home";break;
+case "begin":begin();return;
+case "guest":s.draft.id=btn.dataset.id;s.phase="style";s.page="style";event("guest_selected",{id:s.draft.id});break;
+case "style":s.draft.style=i;s.step=0;s.phase="pick";s.page="pick";event("style_selected",{style:ST[i][0]});break;
+case "pick":selectItem(i);return;
+case "thread":s.thread=true;event("thread_inserted",{method:"tap"});break;
+case "sewcomplete":if(s.strokes===4){applyItem(s.pick);return}break;
+case "rate":s.ratings[s.day]=i;event("return_intent",{score:i});break;
+case "oracle":s.page="oracle";break;
+case "closet":if(!s.items.length)return;s.page="closet";event("wardrobe_open");break;
+case "wear":var p=s.items.find(function(x){return x.index===i});if(p){s.look[p.type]=p;event("item_tried",{index:i})}break;
+case "legend":s.legendOn=!s.legendOn;break;
+case "ball":s.page="ball";event("ball_viewed");break;
+case "next":next();return;
+case "close":$("modal").hidden=true;return;
+case "jump":if(!s.own){$("modal").hidden=true;return;}jump(i);return;
+case "reset":if(confirm("Начать заново и удалить локальный прогресс?")){s=fresh();render()}return;
+case "export":exportData();return;
+}
+render();
+});
+var down=false;
+document.addEventListener("pointerdown",function(e){if(e.target.closest("#fabric"))down=true});
+document.addEventListener("pointerup",function(e){if(!down)return;down=false;if(!e.target.closest("#fabric"))return;if(!s.thread||s.strokes>=4)return;s.strokes++;event("sewing_gesture",{count:s.strokes,part:todayParts()[s.step]});render()});
+document.addEventListener("dragover",function(e){if(e.target.closest("#drop"))e.preventDefault()});
+document.addEventListener("drop",function(e){if(e.target.closest("#drop")){e.preventDefault();s.thread=true;event("thread_inserted",{method:"drag"});render()}});
+document.addEventListener("input",function(e){if(e.target.id==="notes"){s.notes=e.target.value;save()}});
+render();
+})();
+</script>
+</body>
+</html>
